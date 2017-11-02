@@ -1,5 +1,6 @@
 import csv
 
+#returns first non empty string in a comma sperated list
 def extractSingle(stri):
     splitarr = stri.split(",")
     for token in splitarr:
@@ -7,6 +8,7 @@ def extractSingle(stri):
             return token
     return "ERROR: ALL EMPTY"
 
+#extracts from neighbrohood csv and creates array
 def extractNeighborhoods(filename):
     with open('neighbourhoods.csv',newline='') as csvfile
         nfreader = csv.reader(csvfile,delimiter = '')
