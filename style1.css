@@ -1,0 +1,11 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+h1{
+  font-family: "Consolas";
+  color: #A12830;
+}
+.header{
+  background-color: #003A6F;
+}
