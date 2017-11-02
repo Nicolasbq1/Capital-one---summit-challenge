@@ -1,0 +1,13 @@
+0 ID
+39 neighborhood_cleansed
+48 latitude
+49 longitude
+51 property type
+53 accomodates
+60 price
+61 weekly price
+62 monthly price
+64 cleaning fee
+65 guests included?
+67-68minimum and max nights?
+bonus: reviews pos or neg
