@@ -10,7 +10,7 @@
 64 cleaning fee
 65 guests included?
 67-68minimum and max nights?
-bonus: reviews pos or neg
+79 bonus: reviews pos or neg
 
 
 tutorial for some stuff to make site look nicer:
