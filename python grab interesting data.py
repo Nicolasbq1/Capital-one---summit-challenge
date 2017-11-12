@@ -81,8 +81,36 @@ def createPopCSV(ndict):
         for key,value in ndict.items():
             pfwriter.writerow([key,str(value)])
 
+def transferdata():
+    with open('listings.csv',newline='\n',encoding="utf8") as drawfrom:
+        with open('longandprice.csv','w') as drawto:
+            complexinf = csv.reader(drawfrom,delimiter = ',')
+            simpwriter = csv.writer(drawto,delimiter = ',')
+            array = []
+            index = 0
+            for row in complexinf:
+                if index > 0:
+                    array.append([row[39],row[48],row[49],row[60]])
+                index += 1
+
+            for arr in array:
+                simpwriter.writerow(arr)
+
+            return "success!"
+
+def checkhomogeneity():
+    with open("longandprice.csv",newline='\n',encoding="utf8") as csvfile:
+        filereader = csv.reader(csvfile,delimiter = ',')
+        for row in filereader:
+            if len(row) != 4:
+                print("weird")
+                return
+        print("notweird")
+
 if __name__=="__main__":
-    print(matchlongitude())
-    print(matchlatitude())
-    print(updateDict(createpopDict()))
-    createPopCSV(updateDict(createpopDict()))
+    # print(matchlongitude())
+    # print(matchlatitude())
+    #print(updateDict(createpopDict()))
+    #createPopCSV(updateDict(createpopDict()))
+    transferdata()
+    checkhomogeneity()
