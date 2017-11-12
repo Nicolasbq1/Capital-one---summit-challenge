@@ -18,19 +18,26 @@ h2{
   margin:0;
   text-align: center;
   vertical-align: middle;
-  background-color: #909FBF;
+  background-color: #ff5a5f;
 }
 .graph{
-  height: 50vh;
+
+}
+
+#sketch_holder{
+  display: table;
+  background-color:  #00A699;
+;
 }
 .estimation{
   height: 50vh;
-  background-color: #909FBF;
+  background-color: #ff5a5f;
 }
 .booking{
   height: 50vh;
+  background-color:  #00A699;
 }
 .footer{
   height: 10vh;
-  background-color: #909FBF;
+  background-color: #ff5a5f;
 }
