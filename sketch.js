@@ -488,6 +488,10 @@ function calcest(){
     document.getElementById('result').value = "Please enter both values";
     return;
   }
+  else if(parseFloat(long) == NaN||parseFloat(lati) == NaN){
+    document.getElementById('result').value = "Please enter appropriate values";
+    return;
+  }
   document.getElementById('result').value = "";
   var avg = 0;
   var accum = 0;
@@ -531,6 +535,10 @@ function bookingest(){
   }
   else if(long == ""||lati == ""){
     document.getElementById('result1').value = "Please enter both values";
+    return;
+  }
+  else if(parseFloat(long) == NaN||parseFloat(lati) == NaN){
+    document.getElementById('result').value = "Please enter appropriate values";
     return;
   }
   document.getElementById('result1').value = "";
