@@ -23,24 +23,31 @@
     <section class = "estimation">
       <div id = "container">
         <h2 id = "price">Price Estimation</h2>
-        <div id = "calc"></div>
-        <p class = "par">Enter latitude and longitude for estimation</p>
-        Longitude: <input class = "in" type="text" id = "long" name="Longitue" value="0"><br>
-        Latitude:  <input class = "in" type="text" id = "lati" name="Latitude" value="0"><br>
-        <button onclick="calcest()">Enter</button>
-        <p class = "par">Estimated price</p>
-        <input type="text" class = "in" id = "result"/>
+        <div id = "calc">
+          <label class = "par">Enter latitude and longitude for estimation</label></br></br>
+          <div id ="leftall">
+            Longitude: <input class = "in" type="text" id = "long" name="Longitue" value="0"><br>
+            Latitude:  <input class = "in" type="text" id = "lati" name="Latitude" value="0"><br>
+            <button onclick="calcest()">Enter</button></br>
+            <label class = "par">Estimated price</label>
+            <input type="text" class = "in" id = "result"/>
+          </div>
+        </div>
       </div>
     </section>
     <section class = "booking">
       <div id = "container2">
         <h2 id = "booking">Booking Optimization</h2>
-        <p id = "disp">Enter latitude and longitude for estimation</p>
-        Longitude: <input type="text" class = "in" id = "long1" name="Longitue" value="0"><br>
-        Latitude:  <input type="text" class = "in" id = "lati1" name="Latitude" value="0"><br>
-        <button onclick="bookingest()">Enter</button>
-        <p>Estimated value based on neighborhood market</p>
-        <input type="text" class = "in" id = "result1"/>
+        <div id = "calc2">
+          <label class = "disp">Enter latitude and longitude for estimation</label></br></br>
+          <div id ="leftall">
+            Longitude: <input class = "in" type="text" id = "long1" name="Longitue" value="0"><br>
+            Latitude:  <input class = "in" type="text" id = "lati1" name="Latitude" value="0"><br>
+            <button id = "bottom" onclick="bookingest()">Enter</button></br>
+            <label class = "par">Estimated price</label>
+            <input type="text" class = "in" id = "result1"/>
+          </div>
+        </div>
       </div>
     </section>
     <section class = "footer">

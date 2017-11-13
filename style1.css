@@ -47,6 +47,60 @@ h2{
 
     background-color: #f2f2f2;
 }
+#calc{
+  position:relative;
+  left:38%;
+  width:20%;
+  border-radius: 5px;
+   background-color: #f2f2f2;
+   padding: 20px;
+}
+
+#calc2{
+  position:relative;
+  left:38%;
+  width:20%;
+  border-radius: 5px;
+   background-color: #484848;
+   padding: 20px;
+}
+
+#leftall{
+  text-align:left ;
+}
+input[type=text], select {
+    width: 100%;
+    padding: 8px 15px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    background-color: #484848;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#bottom{
+  background-color: #f2f2f2;
+  color: #484848;
+}
+
+#bottom:hover{
+    background-color: #45a049;
+}
+
+button:hover {
+    background-color: #45a049;
+}
 
 #container{
   text-align:center;
