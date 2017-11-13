@@ -19,6 +19,9 @@ var pobarr = [];
 buttarr.push(new button(0,"GRAPH"));
 buttarr.push(new button(1,"MAP"));
 buttarr.push(new button(2,"POP"));
+
+
+//sets up canvas for drawing with p5.js wrapper framework
 function setup() {
   var canvas = createCanvas(600,600);
   canvas.parent('sketch_holder');
@@ -34,6 +37,9 @@ function setup() {
   parseData();
 }
 
+
+//draws on canvas based on state if info not yet loaded
+//shows loading animation, usually only lasts 3 frames
 function draw() {
   if(neighavg == undefined || datarr == undefined || poparr == undefined){
     loadbar.render();
@@ -167,6 +173,8 @@ function draw() {
   }
 }
 
+
+//allows mapping of upper and lower limits of Latitude and Longitude
 function calcLimit(data){
   lowerlati = parseFloat(data[0][1]);
   upperlati = parseFloat(data[0][1]);
@@ -189,6 +197,7 @@ function calcLimit(data){
 }
 
 
+//mouse clicked listener provided by p5.js
 function mousePressed(){
   var butt = butti();
   if(butt >= 0){
@@ -201,6 +210,8 @@ function mousePressed(){
   }
 }
 
+
+//tracks index of button that may be pressed
 function butti(){
   var i = -1;
   if(mouseX >= 0 && mouseX <= 70){
@@ -211,6 +222,8 @@ function butti(){
   return i
 }
 
+
+//buttons that change the state, has hover animation
 function button(i,dstate){
   this.state = dstate;
   this.y = i*20;
@@ -246,11 +259,15 @@ function button(i,dstate){
   }
 }
 
+
+//Calculates the index of the bar being hovered over
 function geti(){
   var i = (mouseX-3-.08*w)/((1/37)*(1-.16)*w);
   return Math.floor(i);
 }
 
+
+//displays informations displayed on bargraph
 function info(i){
   var arr;
   if(state == "GRAPH"){
@@ -349,6 +366,9 @@ function info(i){
   }
 }
 
+
+//object for a bar, used in both bargraphs
+//animated loading every time the graph is loaded into
 function bar(i,neigh,avgp){
   this.prog = 0;
   this.neigh = neigh;
@@ -380,7 +400,7 @@ function bar(i,neigh,avgp){
 }
 
 
-
+//loading animation
 function load(){
   this.pi = 3.14159265358979323;
   this.theta = 1.5*this.pi;
@@ -398,12 +418,17 @@ function load(){
   }
 }
 
+
+//slight web responsivness, doesn't work too well on MAP
+//as map becomes frozen after first paint due to performance restircitons
 function windowResized() {
   w = elem.clientWidth;
   h = .7 *windowHeight;
   resizeCanvas(w,h);
 }
 
+
+//uses papa parse framework to parse extracted CSVs
 function parseData(){
   Papa.parse("longandprice.csv", {
     download: true,
@@ -420,10 +445,14 @@ function parseData(){
   });
 }
 
+
+//full data extraction
 function fullvals(data){
   datarr = data;
 }
 
+
+//creates dict based on neighbourhoods
 function initializeDict(parsedata){
   Papa.parse("neighbourhoods.csv", {
     download: true,
@@ -433,6 +462,9 @@ function initializeDict(parsedata){
   });
 }
 
+
+//calculates prices estimation
+//averages all prices of locations within .2 degress
 function calcest(){
   var long = document.getElementById('long').value;
   var lati = document.getElementById('lati').value;
@@ -472,6 +504,12 @@ function calcest(){
 }
 
 
+//calculates booking estimation
+//calculates average price of the market that is both within
+//.2 degrees of lat and long but also in the same Neighborhood
+//this is to adjust for the fact that different neighbourhoods
+//will hold different value to the market with what they may
+//offer
 function bookingest(){
   var long = document.getElementById('long1').value;
   var lati = document.getElementById('lati1').value;
@@ -520,6 +558,10 @@ function bookingest(){
 
 }
 
+
+//adjusts for odd spacing in csv file (could have been)
+//an os issue on linendings as this was developed in both
+//windows and ubuntu
 function simplifyData(data){
   var array = [];
   data.forEach(function(element) {
@@ -533,6 +575,8 @@ function simplifyData(data){
   return array
 }
 
+
+//creates dict from data
 function rectifyData(data){
   var dict = new Map();
   data.forEach(function(element,index){
@@ -543,6 +587,8 @@ function rectifyData(data){
   return dict
 }
 
+
+//creates avreage price within a neighborhood
 function getData(data,dict) {
   var averages = new Map(dict);
   var accum_div = new Map(dict);
