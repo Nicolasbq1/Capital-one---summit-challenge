@@ -6,7 +6,7 @@ var loadbar = new load();
 var load = false;
 var bararr;
 var neighbar;
-var state = "POP";
+var state = "GRAPH";
 var buttarr = [];
 var datarr;
 var upperlong;
