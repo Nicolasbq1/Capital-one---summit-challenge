@@ -23,7 +23,6 @@ h2{
 .graph{
 
 }
-
 #sketch_holder{
   display: table;
   background-color:  #FFFFFF;
@@ -40,15 +39,35 @@ h2{
   background-image: url('estimationback.png');
   background-color: #484848}
 
+.in{
+  background-color:rgba(255,255,255,.0);
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    background-color: #f2f2f2;
+}
+
 #container{
   text-align:center;
   height: 75vh;
   background-color: rgba(255,255,255,.5);
 }
-
+#booking{
+  padding :50px;
+  padding-bottom:20px;
+  color: #000000;
+}
 .booking{
-  height: 50vh;
+  height: 75vh;
+  background-image: url("calcback.jpg");
+  background-size: 175vh;
   background-color:  #FFFFFF;
+}
+#container2{
+    text-align:center;
+    height: 75vh;
+    background-color: rgba(255,255,255,.5);
 }
 .footer{
   height: 10vh;

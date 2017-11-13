@@ -471,6 +471,55 @@ function calcest(){
 
 }
 
+
+function bookingest(){
+  var long = document.getElementById('long1').value;
+  var lati = document.getElementById('lati1').value;
+  if(parseFloat(lati) < lowerlati){
+    document.getElementById('result1').value = "Latitude too low";
+    return;
+  }
+  else if(parseFloat(lati) > upperlati){
+    document.getElementById('result1').value = "Latitude too high";
+    return;
+  }
+  else if(parseFloat(long) > upperlong){
+    document.getElementById('result1').value = "Longitude too high";
+    return;
+  }
+  else if(parseFloat(long) < lowerlong){
+    document.getElementById('result1').value = "Longitude too low";
+    return;
+  }
+  else if(long == ""||lati == ""){
+    document.getElementById('result1').value = "Please enter both values";
+    return;
+  }
+  document.getElementById('result1').value = "";
+  var avg = 0;
+  var accum = 0;
+  var lowdist = 100;
+  var nearneigh;
+  datarr.forEach(function(element){
+    var dist = Math.sqrt((long-parseFloat(element[2]))*(long-parseFloat(element[2])) + (lati-parseFloat(element[1]))*(lati-parseFloat(element[1])));
+    if(dist<lowdist){
+      lowdist = dist;
+      nearneigh = element[0].slice(0);
+    }
+  });
+  document.getElementById('result1').value = nearneigh;
+  datarr.forEach(function(element){
+    var dist = Math.sqrt((long-parseFloat(element[2]))*(long-parseFloat(element[2])) + (lati-parseFloat(element[1]))*(lati-parseFloat(element[1])));
+    if(dist < .02 && (element[0].slice(0))==nearneigh){
+      avg += parseInt(element[3].slice(1));
+      accum += 1;
+    }
+    var result = avg/accum;
+    document.getElementById('result1').value = result.toString();
+  });
+
+}
+
 function simplifyData(data){
   var array = [];
   data.forEach(function(element) {
