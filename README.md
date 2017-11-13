@@ -41,3 +41,18 @@ https://airbnb.design/building-a-visual-language/
 
 Authors notes:
 Thanks for the opportunity to apply to this program, I ended up learning a lot from this coding challenege.
+
+
+citations:
+frameworks:
+p5.js
+https://p5js.org/
+
+papaparse:
+http://papaparse.com/
+
+image 1:
+https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/HPOKFbR/simple-blue-stacked-area-chart-infographics-animation-as-technology-business-science-stats-or-data-analysis-background_bkofs0qv__F0003.png
+
+image 2:
+https://hiring-assets.careerbuilder.com/media/attachments/careerbuilder-original-3258.jpg?1497290728
