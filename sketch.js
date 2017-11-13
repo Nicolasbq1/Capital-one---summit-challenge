@@ -7,6 +7,10 @@ var load = false;
 var bararr;
 var neighbar;
 var state = "graph";
+var buttarr = [];
+buttarr.push(new button(0,"graph"));
+buttarr.push(new button(1,"state"));
+buttarr.push(new button(2,"pop"));
 function setup() {
   var canvas = createCanvas(600,600);
   canvas.parent('sketch_holder');
@@ -24,6 +28,9 @@ function setup() {
 
 function draw() {
   background(255);
+  for(var i = 0; i < 3;i++){
+    buttarr[i].render(false);
+  }
   if(neighavg == undefined){
     loadbar.render();
     loadbar.update();
@@ -36,7 +43,7 @@ function draw() {
       i++;
     }
   }
-  else{
+  else if(state == "graph"){
     push();
     stroke("#fc642d");
     strokeWeight(4);
@@ -61,6 +68,32 @@ function draw() {
   }
 }
 
+function button(i,state){
+  this.state = state;
+  this.y = i*20;
+  this.current = false;
+  this.render= function(hover){
+    push();
+    if(this.current||hover){
+      noStroke();
+      fill("#fc642d");
+      rect(0,this.y,70,20);
+      noStroke();
+      fill(255);
+      text(state,20,this.y+10);
+    }
+    else{
+      stroke("#fc642d");
+      fill(255);
+      rect(0,this.y,70,20);
+      noStroke();
+      fill("#fc642d");
+      text(state,20,this.y+12);
+    }
+    pop();
+  }
+}
+
 function geti(){
   var i = (mouseX-3-.08*w)/((1/37)*(1-.16)*w);
   return Math.floor(i);
@@ -81,7 +114,7 @@ function info(i){
         vertex(mouseX + 20, mouseY -20);
         endShape(CLOSE);
         fill(0);
-        strokeWeight(1);
+        strokeWeight(.5);
         text(bararr[i].neigh,mouseX + 10,mouseY-80);
         text("$"+bararr[i].avgp,mouseX + 10,mouseY-50);
         pop();
@@ -98,7 +131,7 @@ function info(i){
         vertex(mouseX + 20, mouseY +20);
         endShape(CLOSE);
         fill(0);
-        strokeWeight(1);
+        strokeWeight(.5);
         text(bararr[i].neigh,mouseX + 10,mouseY+50);
         text("$"+bararr[i].avgp,mouseX + 10,mouseY + 80);
         pop();
@@ -115,7 +148,7 @@ function info(i){
         vertex(mouseX - 20, mouseY -20);
         endShape(CLOSE);
         fill(0);
-        strokeWeight(1);
+        strokeWeight(.5);
         text(bararr[i].neigh,mouseX + 10-140,mouseY-80);
         text("$"+bararr[i].avgp,mouseX + 10-140,mouseY-50);
         pop();
@@ -132,14 +165,11 @@ function info(i){
         vertex(mouseX - 20, mouseY +20);
         endShape(CLOSE);
         fill(0);
-        strokeWeight(1);
+        strokeWeight(.5);
         text(bararr[i].neigh,mouseX + 10-140,mouseY+50);
         text("$"+bararr[i].avgp,mouseX + 10-140,mouseY+80);
         pop();
       }
-    }
-    else{
-      console.log(false);
     }
   }
 }
