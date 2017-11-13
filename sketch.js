@@ -6,11 +6,11 @@ var loadbar = new load();
 var load = false;
 var bararr;
 var neighbar;
-var state = "graph";
+var state = "GRAPH";
 var buttarr = [];
-buttarr.push(new button(0,"graph"));
-buttarr.push(new button(1,"state"));
-buttarr.push(new button(2,"pop"));
+buttarr.push(new button(0,"GRAPH"));
+buttarr.push(new button(1,"MAP"));
+buttarr.push(new button(2,"POP"));
 function setup() {
   var canvas = createCanvas(600,600);
   canvas.parent('sketch_holder');
@@ -18,7 +18,7 @@ function setup() {
     document.documentElement :
     document.body;
   w = elem.clientWidth;
-  h = .6*windowHeight;
+  h = .7*windowHeight;
   resizeCanvas(w,h);
   background('#00A699');
   parseData();
@@ -29,7 +29,8 @@ function setup() {
 function draw() {
   background(255);
   for(var i = 0; i < 3;i++){
-    buttarr[i].render(false);
+    buttarr[i].update();
+    buttarr[i].render(butti() == i);
   }
   if(neighavg == undefined){
     loadbar.render();
@@ -43,10 +44,17 @@ function draw() {
       i++;
     }
   }
-  else if(state == "graph"){
+  else if(state == "GRAPH"){
     push();
     stroke("#fc642d");
     strokeWeight(4);
+    push();
+    noStroke();
+    fill("#fc642d");
+    textAlign(CENTER);
+    textSize(32);
+    text("Average price per night by Neighborhood",.5*w,40);
+    pop();
     line(.08*w,.9*h,(1-.08)*w,.9*h);
     line(.08*w,.9*h,.08*w,.2*h);
     var lh = .9*h-50;
@@ -68,19 +76,45 @@ function draw() {
   }
 }
 
-function button(i,state){
-  this.state = state;
+function mousePressed(){
+  var butt = butti();
+  if(butt >= 0){
+    state = buttarr[butt].state
+  }
+}
+
+function butti(){
+  var i = -1;
+  if(mouseX >= 0 && mouseX <= 70){
+    if(mouseY >= 0 && mouseY <= 60){
+      i = Math.floor(mouseY/20)
+    }
+  }
+  return i
+}
+
+function button(i,dstate){
+  this.state = dstate;
   this.y = i*20;
   this.current = false;
+  this.update = function(){
+    if(state==this.state){
+      this.current = true;
+    }
+    else{
+      this.current = false;
+    }
+  }
   this.render= function(hover){
     push();
+    textAlign(CENTER);
     if(this.current||hover){
-      noStroke();
+      stroke("#fc642d");
       fill("#fc642d");
       rect(0,this.y,70,20);
       noStroke();
       fill(255);
-      text(state,20,this.y+10);
+      text(dstate,35,this.y+15);
     }
     else{
       stroke("#fc642d");
@@ -88,7 +122,7 @@ function button(i,state){
       rect(0,this.y,70,20);
       noStroke();
       fill("#fc642d");
-      text(state,20,this.y+12);
+      text(dstate,35,this.y+15);
     }
     pop();
   }
