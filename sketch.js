@@ -14,6 +14,7 @@ var lowerlong;
 var upperlati;
 var lowerlati;
 var poparr;
+var drawn = false;
 var pobarr = [];
 buttarr.push(new button(0,"GRAPH"));
 buttarr.push(new button(1,"MAP"));
@@ -34,11 +35,6 @@ function setup() {
 }
 
 function draw() {
-  background(255);
-  for(var i = 0; i < 3;i++){
-    buttarr[i].update();
-    buttarr[i].render(butti() == i);
-  }
   if(neighavg == undefined || datarr == undefined || poparr == undefined){
     loadbar.render();
     loadbar.update();
@@ -58,6 +54,11 @@ function draw() {
     stroke(0);
   }
   else if(state == "GRAPH"){
+    background(255);
+    for(var i = 0; i < 3;i++){
+      buttarr[i].update();
+      buttarr[i].render(butti() == i);
+    }
     push();
     stroke("#fc642d");
     strokeWeight(4);
@@ -82,38 +83,56 @@ function draw() {
       lh -= 50;
     }
     for(var i = 0;i < 37;i++){
+      bararr[i].update();
       bararr[i].render();
     }
     info(geti());
     pop();
   }
   else if(state == "MAP") {
-    var scale = (upperlong-lowerlong)/(upperlati-lowerlati);
-    push();
-    stroke("#fc642d");
-    var height = .97*h-20;
-    var width = height*scale;
-    rect(.25*w,.97*h,width,-height);
-    datarr.forEach(function(element,index){
-      var r = map(parseInt(element[3].slice(1)),0,321,0,255);
-      var b = 50;
-      strokeWeight(5);
-      stroke(r,50,b);
-      var lati = parseFloat(element[1]);
-      var long = parseFloat(element[2]);
-      var mappedlat = map(lati,lowerlati,upperlati,.25*w,.25*w +width);
-      var mappedlong = map(long,lowerlong,upperlong,.97*h-height,.97*h);
-      point(mappedlat,mappedlong);
-    });
-    textSize(32);
-    noStroke();
-    fill("#fc642d");
-    if(.25*w >= 250){
-      text("Price Heat Map",20, 200);
+    for(var i = 0; i < 3;i++){
+      buttarr[i].update();
+      buttarr[i].render(butti() == i);
     }
-    pop();
+    if(!drawn){//reduce lag from redrawing points
+      background(255);
+      for(var i = 0; i < 3;i++){
+        buttarr[i].update();
+        buttarr[i].render(butti() == i);
+      }
+      drawn = true;
+      var scale = (upperlong-lowerlong)/(upperlati-lowerlati);
+      push();
+      stroke("#fc642d");
+      var height = .97*h-20;
+      var width = height*scale;
+      rect(.25*w,.97*h,width,-height);
+      datarr.forEach(function(element,index){
+        var r = map(parseInt(element[3].slice(1)),0,321,0,255);
+        var b = 50;
+        strokeWeight(5);
+        stroke(r,50,b);
+        var lati = parseFloat(element[1]);
+        var long = parseFloat(element[2]);
+        var mappedlat = map(lati,lowerlati,upperlati,.25*w,.25*w +width);
+        var mappedlong = map(long,lowerlong,upperlong,.97*h-height,.97*h);
+        point(mappedlat,mappedlong);
+      });
+      textSize(32);
+      noStroke();
+      fill("#fc642d");
+      if(.25*w >= 250){
+        text("Price Heat Map",20, 200);
+      }
+      pop();
+    }
   }
   else if(state == "POP"){
+    background(255);
+    for(var i = 0; i < 3;i++){
+      buttarr[i].update();
+      buttarr[i].render(butti() == i);
+    }
     push();
     stroke("#fc642d");
     strokeWeight(4);
@@ -174,6 +193,11 @@ function mousePressed(){
   var butt = butti();
   if(butt >= 0){
     state = buttarr[butt].state
+    for(var i = 0;i < 37;i++){
+      pobarr[i].prog = 0;
+      bararr[i].prog = 0;
+    }
+  drawn = false;
   }
 }
 
@@ -326,6 +350,7 @@ function info(i){
 }
 
 function bar(i,neigh,avgp){
+  this.prog = 0;
   this.neigh = neigh;
   this.avgp = avgp;
   this.x = .08*w+(1/37)*(1-.16)*w*i+3;
@@ -333,9 +358,14 @@ function bar(i,neigh,avgp){
   this.height = this.avgp;
   this.width = (1/37)*(1-.16)*w-2;
   this.update=function(){
-    var height = map(parseFloat(poparr[i][1]),85,100,0,.7*h);
-    this.height = height;
-    this.avgp = height;
+    if(state == "POP"){
+      var height = map(parseFloat(poparr[i][1]),85,100,0,.7*h);
+      this.height = height;
+      this.avgp = height;
+    }
+    if(this.prog < this.height){
+      this.prog +=5;
+    }
   }
   this.render = function(){
     this.x = .08*w+(1/37)*(1-.16)*w*i+3;
@@ -344,7 +374,7 @@ function bar(i,neigh,avgp){
     push();
     noStroke();
     fill('#00A699');
-    rect(this.x,this.y,this.width,-this.height);
+    rect(this.x,this.y,this.width,-this.prog);
     pop();
   }
 }
