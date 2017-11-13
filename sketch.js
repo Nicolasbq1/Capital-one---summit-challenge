@@ -380,6 +380,7 @@ function bar(i,neigh,avgp){
 }
 
 
+
 function load(){
   this.pi = 3.14159265358979323;
   this.theta = 1.5*this.pi;
@@ -430,6 +431,44 @@ function initializeDict(parsedata){
       getData(parsedata,rectifyData(results.data));
   	}
   });
+}
+
+function calcest(){
+  var long = document.getElementById('long').value;
+  var lati = document.getElementById('lati').value;
+  if(parseFloat(lati) < lowerlati){
+    document.getElementById('result').value = "Latitude too low";
+    return;
+  }
+  else if(parseFloat(lati) > upperlati){
+    document.getElementById('result').value = "Latitude too high";
+    return;
+  }
+  else if(parseFloat(long) > upperlong){
+    document.getElementById('result').value = "Longitude too high";
+    return;
+  }
+  else if(parseFloat(long) < lowerlong){
+    document.getElementById('result').value = "Longitude too low";
+    return;
+  }
+  else if(long == ""||lati == ""){
+    document.getElementById('result').value = "Please enter both values";
+    return;
+  }
+  document.getElementById('result').value = "";
+  var avg = 0;
+  var accum = 0;
+  datarr.forEach(function(element){
+    var dist = Math.sqrt((long-parseFloat(element[2]))*(long-parseFloat(element[2])) + (lati-parseFloat(element[1]))*(lati-parseFloat(element[1])));
+    if(dist < .02){
+      avg += parseInt(element[3].slice(1));
+      accum += 1;
+    }
+    var result = avg/accum;
+    document.getElementById('result').value = result.toString();
+  });
+
 }
 
 function simplifyData(data){
