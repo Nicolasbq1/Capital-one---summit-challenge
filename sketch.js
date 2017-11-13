@@ -6,8 +6,15 @@ var loadbar = new load();
 var load = false;
 var bararr;
 var neighbar;
-var state = "GRAPH";
+var state = "POP";
 var buttarr = [];
+var datarr;
+var upperlong;
+var lowerlong;
+var upperlati;
+var lowerlati;
+var poparr;
+var pobarr = [];
 buttarr.push(new button(0,"GRAPH"));
 buttarr.push(new button(1,"MAP"));
 buttarr.push(new button(2,"POP"));
@@ -21,9 +28,9 @@ function setup() {
   h = .7*windowHeight;
   resizeCanvas(w,h);
   background('#00A699');
-  parseData();
   bararr = [];
   neighbar = new Map();
+  parseData();
 }
 
 function draw() {
@@ -32,17 +39,23 @@ function draw() {
     buttarr[i].update();
     buttarr[i].render(butti() == i);
   }
-  if(neighavg == undefined){
+  if(neighavg == undefined || datarr == undefined || poparr == undefined){
     loadbar.render();
     loadbar.update();
   }
   else if(!load){
+    calcLimit(datarr);
     load = true;
     var i = 0;
     for(var [key,value] of neighavg){
       bararr.push(new bar(i,key,value));
       i++;
     }
+    poparr.forEach(function(element,index){
+      var height = map(parseFloat(element[1]),85,100,0,.7*h);
+      pobarr.push(new bar(index,element[0],height));
+    });
+    stroke(0);
   }
   else if(state == "GRAPH"){
     push();
@@ -74,7 +87,88 @@ function draw() {
     info(geti());
     pop();
   }
+  else if(state == "MAP") {
+    var scale = (upperlong-lowerlong)/(upperlati-lowerlati);
+    push();
+    stroke("#fc642d");
+    var height = .97*h-20;
+    var width = height*scale;
+    rect(.25*w,.97*h,width,-height);
+    datarr.forEach(function(element,index){
+      var r = map(parseInt(element[3].slice(1)),0,321,0,255);
+      var b = 50;
+      strokeWeight(5);
+      stroke(r,50,b);
+      var lati = parseFloat(element[1]);
+      var long = parseFloat(element[2]);
+      var mappedlat = map(lati,lowerlati,upperlati,.25*w,.25*w +width);
+      var mappedlong = map(long,lowerlong,upperlong,.97*h-height,.97*h);
+      point(mappedlat,mappedlong);
+    });
+    textSize(32);
+    noStroke();
+    fill("#fc642d");
+    if(.25*w >= 250){
+      text("Price Heat Map",20, 200);
+    }
+    pop();
+  }
+  else if(state == "POP"){
+    push();
+    stroke("#fc642d");
+    strokeWeight(4);
+    push();
+    noStroke();
+    fill("#fc642d");
+    textAlign(CENTER);
+    textSize(32);
+    text("Neighborhood Popularity",.5*w,40);
+    pop();
+    line(.08*w,.9*h,(1-.08)*w,.9*h);
+    line(.08*w,.9*h,.08*w,.2*h);
+    var lh = .9*h;
+    var index = 0;
+    while(lh >= .15*h){
+      line(.08*w-5,lh,.08*w+5,lh);
+      push();
+      textSize(10);
+      noStroke();
+      var lmark = 85+index*5;
+      index++;
+      text(lmark.toString()+"%",.08*w-30,lh+3);
+      pop();
+      lh -= .7*h/3;
+    }
+    for(var i = 0;i < 37;i++){
+      pobarr[i].update();
+      pobarr[i].render();
+    }
+    info(geti());
+    pop();
+  }
 }
+
+function calcLimit(data){
+  lowerlati = parseFloat(data[0][1]);
+  upperlati = parseFloat(data[0][1]);
+  lowerlong = parseFloat(data[0][2]);
+  upperlong = parseFloat(data[0][2]);
+  data.forEach(function(element){
+    if(lowerlati > parseFloat(element[1])){
+      lowerlati = parseFloat(element[1]);
+    }
+    if(upperlati < parseFloat(element[1])){
+      upperlati = parseFloat(element[1]);
+    }
+    if(lowerlong > parseFloat(element[2])){
+      lowerlong = parseFloat(element[2]);
+    }
+    if(upperlong< parseFloat(element[2])){
+      upperlong = parseFloat(element[2]);
+    }
+  });
+}
+
 
 function mousePressed(){
   var butt = butti();
@@ -134,8 +228,15 @@ function geti(){
 }
 
 function info(i){
+  var arr;
+  if(state == "GRAPH"){
+    arr = bararr;
+  }
+  else{
+    arr = pobarr;
+  }
   if(i >= 0 && i <= 36){
-    if(mouseY >= bararr[i].y-bararr[i].height && mouseY <=bararr[i].y){
+    if(mouseY >= arr[i].y-arr[i].height && mouseY <=arr[i].y){
       if(mouseX <= w-140 && mouseY >= 100){
         push();
         stroke(0);
@@ -149,8 +250,12 @@ function info(i){
         endShape(CLOSE);
         fill(0);
         strokeWeight(.5);
-        text(bararr[i].neigh,mouseX + 10,mouseY-80);
-        text("$"+bararr[i].avgp,mouseX + 10,mouseY-50);
+        text(arr[i].neigh,mouseX + 10,mouseY-80);
+        var disp = "$" + arr[i].avgp;
+        if(state == "POP"){
+          disp =map(arr[i].avgp,0,.7*h,85,100)+"%";
+        }
+        text(disp,mouseX + 10,mouseY-50);
         pop();
       }
       else if(mouseX <= w -140){
@@ -166,8 +271,12 @@ function info(i){
         endShape(CLOSE);
         fill(0);
         strokeWeight(.5);
-        text(bararr[i].neigh,mouseX + 10,mouseY+50);
-        text("$"+bararr[i].avgp,mouseX + 10,mouseY + 80);
+        text(arr[i].neigh,mouseX + 10,mouseY+50);
+        var disp = "$" + arr[i].avgp;
+        if(state == "POP"){
+          disp =map(arr[i].avgp,0,.7*h,85,100)+"%";
+        }
+        text(disp,mouseX + 10,mouseY+80);
         pop();
       }
       else if(mouseY >= 100){
@@ -183,8 +292,12 @@ function info(i){
         endShape(CLOSE);
         fill(0);
         strokeWeight(.5);
-        text(bararr[i].neigh,mouseX + 10-140,mouseY-80);
-        text("$"+bararr[i].avgp,mouseX + 10-140,mouseY-50);
+        text(arr[i].neigh,mouseX + 10-140,mouseY-80);
+        var disp = "$" + arr[i].avgp;
+        if(state == "POP"){
+          disp =map(arr[i].avgp,0,.7*h,85,100)+"%";
+        }
+        text(disp,mouseX + 10-140,mouseY-50);
         pop();
       }
       else{
@@ -200,8 +313,12 @@ function info(i){
         endShape(CLOSE);
         fill(0);
         strokeWeight(.5);
-        text(bararr[i].neigh,mouseX + 10-140,mouseY+50);
-        text("$"+bararr[i].avgp,mouseX + 10-140,mouseY+80);
+        text(arr[i].neigh,mouseX + 10-140,mouseY+50);
+        var disp = "$" + arr[i].avgp;
+        if(state == "POP"){
+          disp =map(arr[i].avgp,0,.7*h,85,100)+"%";
+        }
+        text(disp,mouseX + 10-140,mouseY+80);
         pop();
       }
     }
@@ -215,6 +332,11 @@ function bar(i,neigh,avgp){
   this.y = .9*h-2;
   this.height = this.avgp;
   this.width = (1/37)*(1-.16)*w-2;
+  this.update=function(){
+    var height = map(parseFloat(poparr[i][1]),85,100,0,.7*h);
+    this.height = height;
+    this.avgp = height;
+  }
   this.render = function(){
     this.x = .08*w+(1/37)*(1-.16)*w*i+3;
     this.y = .9*h-2;
@@ -247,7 +369,7 @@ function load(){
 
 function windowResized() {
   w = elem.clientWidth;
-  h = .6*windowHeight;
+  h = .7 *windowHeight;
   resizeCanvas(w,h);
 }
 
@@ -256,8 +378,19 @@ function parseData(){
     download: true,
   	complete: function(results) {
       initializeDict(simplifyData(results.data));
+      fullvals(simplifyData(results.data));
   	}
   });
+  Papa.parse("popular.csv", {
+    download: true,
+  	complete: function(results) {
+        poparr = results.data;
+  	}
+  });
+}
+
+function fullvals(data){
+  datarr = data;
 }
 
 function initializeDict(parsedata){
